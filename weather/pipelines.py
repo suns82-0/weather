@@ -12,7 +12,7 @@ class WeatherPipeline(object):
 
     def process_item(self, item, spider):
         with open('wea.txt','w+') as file:
-            city = item['city'].encode('utf-8')
+            city = item['city'][0].encode('utf-8')
             file.write('city:' + str(city) + '\n\n')
 
             date = item['date']
@@ -31,8 +31,18 @@ class WeatherPipeline(object):
                 dd = item[1]
                 nd = item[2]
                 ta = item[3].split('/')
-                dt = ta[0]
-                nt = ta[1]
-                txt = 'date:{0}\t\tday:{1}({2})\t\tnight:{3}({4})\n\n'.format(d,dd.encode('utf-8'),dt.encode('utf-8'),nd.encode('utf-8'),nt.encode('utf-8'))
+                if len(ta) == 1:
+                    dt = ' '
+                    nt = ta[0]
+                else:
+                    dt = ta[0]
+                    nt = ta[1]
+                txt = 'date:{0}\t\tday:{1}({2})\t\tnight:{3}({4})\n\n'.format(
+                    d,
+                    dd.encode('utf-8'),
+                    dt.encode('utf-8'),
+                    nd.encode('utf-8'),
+                    nt.encode('utf-8')
+                )
                 file.write(txt)
         return item
